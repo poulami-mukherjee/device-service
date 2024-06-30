@@ -1,5 +1,8 @@
 package com.example.deviceservice.dto;
 
-// not null check import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
-public record DeviceDto(String name, String brand) { }
+public record DeviceDto(
+        @NotNull(message = "Name must not be null") String name,
+        @NotNull(message = "Brand must not be null") String brand
+) { }
