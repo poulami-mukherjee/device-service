@@ -91,6 +91,26 @@ public class DeviceService {
         }
     }
 
+    /**
+     * Updates an existing device.
+     *
+     * @param id the ID of the device to update
+     * @param deviceDto the data transfer object containing the updated device details
+     * @return the updated device
+     * @throws DeviceNotFoundException if the device with the specified ID is not found
+     * @throws DeviceServiceException if an error occurs while updating the device
+     */
+    @Transactional
+    public Device updateDevice(Long id, DeviceDto deviceDto) {
+        try {
+            Device device = findDeviceById(id);
+            device.setName(deviceDto.name());
+            device.setBrand(deviceDto.brand());
+            return deviceRepository.save(device);
+        } catch (Exception e) {
+            throw new DeviceServiceException("Error updating device", e);
+        }
+    }
 
     /**
      * Deletes a device by its ID.

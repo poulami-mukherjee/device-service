@@ -73,4 +73,55 @@ public class DeviceController {
         return ResponseEntity.ok(devices);
     }
 
+    /**
+     * Updates an existing device.
+     *
+     * @param id the ID of the device to update
+     * @param deviceDto the data transfer object containing the updated device details
+     * @return the updated device
+     * @throws DeviceNotFoundException if the device with the specified ID is not found
+     * @throws DeviceServiceException if an error occurs while updating the device
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Device> updateDevice(@PathVariable Long id, @Valid @RequestBody DeviceDto deviceDto) {
+        Device updatedDevice = deviceService.updateDevice(id, deviceDto);
+        return ResponseEntity.ok(updatedDevice);
+    }
+
+    /**
+     * Partially updates an existing device.
+     *
+     * @param id the ID of the device to update
+     * @param deviceDto the data transfer object containing the updated device details
+     * @return the updated device
+     * @throws DeviceNotFoundException if the device with the specified ID is not found
+     * @throws DeviceServiceException if an error occurs while updating the device
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<Device> partialUpdateDevice(@PathVariable Long id, @RequestBody DeviceDto deviceDto) {
+        Device existingDevice = deviceService.findDeviceById(id);
+        if (deviceDto.name() != null) {
+            existingDevice.setName(deviceDto.name());
+        }
+        if (deviceDto.brand() != null) {
+            existingDevice.setBrand(deviceDto.brand());
+        }
+        Device updatedDevice = deviceService.updateDevice(id, deviceDto);
+        return ResponseEntity.ok(updatedDevice);
+    }
+
+    /**
+     * Deletes a device by its ID.
+     *
+     * @param id the ID of the device to delete
+     * @return a response entity with status code 204 (No Content)
+     * @throws DeviceNotFoundException if the device with the specified ID is not found
+     * @throws DeviceServiceException if an error occurs while deleting the device
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDevice(@PathVariable Long id) {
+        deviceService.deleteDevice(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
