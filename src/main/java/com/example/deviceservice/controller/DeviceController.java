@@ -6,13 +6,12 @@ import com.example.deviceservice.service.DeviceService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import com.example.deviceservice.exception.DeviceNotFoundException;
+import com.example.deviceservice.exception.DeviceServiceException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/devices")
@@ -23,23 +22,55 @@ public class DeviceController {
     private DeviceService deviceService;
 
     /**
-     * Handles the POST request to add a new device.
+     * Creates a new device.
      *
-     * @param deviceDto The data transfer object containing device information.
-     * @return ResponseEntity containing the created Device.
-     *         Returns a 201 Created response with the device data if the device is successfully created.
-     *         Returns a 400 Bad Request response if the request is invalid.
-     *         In case of an internal server error, logs the error and returns a 500 Internal Server Error response.
+     * @param deviceDto the data transfer object containing the device details
+     * @return the created device
+     * @throws DeviceServiceException if an error occurs while creating the device
      */
     @PostMapping
     public ResponseEntity<Device> addDevice(@Valid @RequestBody DeviceDto deviceDto) {
-        try {
-            Device device = deviceService.createDevice(deviceDto);
-            log.info("Device: {} of brand: {} is created", deviceDto.name(), deviceDto.brand());
-            return ResponseEntity.status(HttpStatus.CREATED).body(device);
-        } catch (Exception ex) {
-            log.error("Internal server error: " + ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        Device device = deviceService.createDevice(deviceDto);
+        return ResponseEntity.status(201).body(device);
     }
+
+    /**
+     * Retrieves a device by its ID.
+     *
+     * @param id the ID of the device to retrieve
+     * @return the device with the specified ID
+     * @throws DeviceNotFoundException if the device with the specified ID is not found
+     * @throws DeviceServiceException if an error occurs while retrieving the device
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Device> getDeviceById(@PathVariable Long id) {
+        Device device = deviceService.findDeviceById(id);
+        return ResponseEntity.ok(device);
+    }
+
+    /**
+     * Retrieves all devices.
+     *
+     * @return a list of all devices
+     * @throws DeviceServiceException if an error occurs while retrieving devices
+     */
+    @GetMapping
+    public ResponseEntity<List<Device>> getAllDevices() {
+        List<Device> devices = deviceService.findAllDevices();
+        return ResponseEntity.ok(devices);
+    }
+
+    /**
+     * Searches for devices by their brand.
+     *
+     * @param brand the brand of the devices to search for
+     * @return a list of devices with the specified brand
+     * @throws DeviceServiceException if an error occurs while finding devices by brand
+     */
+    @GetMapping("/brand/{brand}")
+    public ResponseEntity<List<Device>> searchDevicesByBrand(@PathVariable String brand) {
+        List<Device> devices = deviceService.findDevicesByBrand(brand);
+        return ResponseEntity.ok(devices);
+    }
+
 }

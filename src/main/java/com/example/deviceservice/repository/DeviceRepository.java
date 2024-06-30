@@ -18,4 +18,5 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
      * @param brand the brand of the devices to find
      * @return a list of devices with the specified brand
      */
+    List<Device> findByBrand(String brand);
 }
