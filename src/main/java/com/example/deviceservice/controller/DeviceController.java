@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.deviceservice.exception.DeviceNotFoundException;
 import com.example.deviceservice.exception.DeviceServiceException;
-
 import java.util.List;
 
 @RestController
@@ -28,9 +27,10 @@ public class DeviceController {
      * @return the created device
      * @throws DeviceServiceException if an error occurs while creating the device
      */
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Device> addDevice(@Valid @RequestBody DeviceDto deviceDto) {
         Device device = deviceService.createDevice(deviceDto);
+        log.info("Device: {} of Brand: {} created", deviceDto.name(), deviceDto.brand());
         return ResponseEntity.status(201).body(device);
     }
 
@@ -123,5 +123,4 @@ public class DeviceController {
         deviceService.deleteDevice(id);
         return ResponseEntity.noContent().build();
     }
-
 }
