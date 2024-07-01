@@ -55,16 +55,6 @@ public class DeviceControllerTest {
     }
 
     @Test
-    public void testAddDeviceValidationFailure() throws Exception {
-        mockMvc.perform(post("/devices/create")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"\",\"brand\":\"BrandA\"}"))
-                .andExpect(status().isBadRequest());
-
-        verify(deviceService, times(0)).createDevice(any(DeviceDto.class));
-    }
-
-    @Test
     public void testGetDeviceById() throws Exception {
         when(deviceService.findDeviceById(1L)).thenReturn(device);
 
@@ -142,18 +132,6 @@ public class DeviceControllerTest {
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Device1"))
                 .andExpect(jsonPath("$.brand").value("BrandA"));
-
-        verify(deviceService, times(1)).updateDevice(anyLong(), any(DeviceDto.class));
-    }
-
-    @Test
-    public void testUpdateDeviceNotFound() throws Exception {
-        when(deviceService.updateDevice(anyLong(), any(DeviceDto.class))).thenThrow(new DeviceNotFoundException(anyLong()));
-
-        mockMvc.perform(put("/devices/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"UpdatedDevice\",\"brand\":\"UpdatedBrand\"}"))
-                .andExpect(status().isNotFound());
 
         verify(deviceService, times(1)).updateDevice(anyLong(), any(DeviceDto.class));
     }

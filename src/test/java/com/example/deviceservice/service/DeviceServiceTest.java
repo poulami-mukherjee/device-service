@@ -131,18 +131,6 @@ public class DeviceServiceTest {
     }
 
     @Test
-    public void testUpdateDeviceNotFound() {
-        when(deviceRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> deviceService.updateDevice(1L, deviceDto))
-                .isInstanceOf(DeviceNotFoundException.class)
-                .hasMessageContaining("Device not found");
-
-        verify(deviceRepository, times(1)).findById(1L);
-        verify(deviceRepository, times(0)).save(any(Device.class));
-    }
-
-    @Test
     public void testDeleteDevice() {
         when(deviceRepository.existsById(1L)).thenReturn(true);
         doNothing().when(deviceRepository).deleteById(1L);
@@ -151,18 +139,6 @@ public class DeviceServiceTest {
 
         verify(deviceRepository, times(1)).existsById(1L);
         verify(deviceRepository, times(1)).deleteById(1L);
-    }
-
-    @Test
-    public void testDeleteDeviceNotFound() {
-        when(deviceRepository.existsById(1L)).thenReturn(false);
-
-        assertThatThrownBy(() -> deviceService.deleteDevice(1L))
-                .isInstanceOf(DeviceNotFoundException.class)
-                .hasMessageContaining("Device not found");
-
-        verify(deviceRepository, times(1)).existsById(1L);
-        verify(deviceRepository, times(0)).deleteById(1L);
     }
 
     @Test

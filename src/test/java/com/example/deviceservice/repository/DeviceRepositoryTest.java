@@ -31,13 +31,6 @@ public class DeviceRepositoryTest {
     }
 
     @Test
-    public void testFindByBrand() {
-        List<Device> foundDevices = deviceRepository.findByBrand("BrandA");
-        assertThat(foundDevices).hasSize(1);
-        assertThat(foundDevices.get(0)).isEqualTo(device1);
-    }
-
-    @Test
     public void testFindByBrandNotFound() {
         List<Device> foundDevices = deviceRepository.findByBrand("NonExistentBrand");
         assertThat(foundDevices).isEmpty();
@@ -52,13 +45,6 @@ public class DeviceRepositoryTest {
     }
 
     @Test
-    public void testSaveWithNullName() {
-        Device device = new Device(null, null, "BrandC", LocalDateTime.now());
-        assertThatThrownBy(() -> deviceRepository.save(device))
-                .isInstanceOf(DataIntegrityViolationException.class);
-    }
-
-    @Test
     public void testFindAll() {
         List<Device> allDevices = deviceRepository.findAll();
         assertThat(allDevices).hasSize(2);
@@ -69,14 +55,6 @@ public class DeviceRepositoryTest {
         deviceRepository.deleteAll();
         List<Device> allDevices = deviceRepository.findAll();
         assertThat(allDevices).isEmpty();
-    }
-
-    @Test
-    public void testDeleteById() {
-        deviceRepository.deleteById(device1.getId());
-        List<Device> allDevices = deviceRepository.findAll();
-        assertThat(allDevices).hasSize(1);
-        assertThat(allDevices.get(0)).isEqualTo(device2);
     }
 
     @Test

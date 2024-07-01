@@ -1,4 +1,5 @@
 package com.example.deviceservice.exception;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 /**
  * Global exception handler for handling exceptions and returning appropriate HTTP responses.
  */
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -18,6 +20,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DeviceNotFoundException.class)
     public ResponseEntity<String> handleDeviceNotFoundException(DeviceNotFoundException ex) {
+        log.error("Device Not Found Exception");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
@@ -29,6 +32,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DeviceServiceException.class)
     public ResponseEntity<String> handleDeviceServiceException(DeviceServiceException ex) {
+        log.error("Internal Error - Device Service Exception");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 
@@ -40,6 +44,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception ex) {
+        log.error("Internal Error");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
     }
 }
