@@ -289,7 +289,7 @@ device-management-service/
     - DeviceServiceException (500 HTTP Status Code) if an error occurs while updating the device
 
     
-### Testing the Endpoints
+## Testing the Endpoints
 
 You can test the API endpoints using Postman or cURL.
 
@@ -297,7 +297,7 @@ You can test the API endpoints using Postman or cURL.
 
 1. **Add a Device:**
     - **Method:** POST
-    - **URL:** `http://localhost:8080/devices`
+    - **URL:** `http://localhost:8080/devices/create`
     - **Headers:**
         - `Content-Type: application/json`
     - **Body:**
@@ -357,7 +357,7 @@ You can test the API endpoints using Postman or cURL.
 1. **Add a Device:**
 
     ```
-    curl -X POST http://localhost:8080/devices \
+    curl -X POST http://localhost:8080/devices/create \
     -H "Content-Type: application/json" \
     -d '{"name": "Device1", "brand": "BrandA"}'
     
